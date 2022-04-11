@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Activation</title>
+<!--上記で記載していたライブラリを読み込む（S3にアップした名前をsrc=""に入れる）//-->
+  <!-- aws sdk //-->
+  <script src="js/aws-sdk.min.js"></script>
+  <!-- aws cognito sdk//-->
+  <script src="js/jsbn.js"></script>
+  <script src="js/jsbn2.js"></script>
+  <script src="js/sjcl.js"></script>
+  <script src="js/moment.js"></script>
+  <script src="js/aws-cognito-sdk.min.js"></script>
+  <script src="js/amazon-cognito-identity.min.js"></script>
+  <!-- jquery //-->
+  <script src="js/jquery-3.1.1.min.js"></script>
+  <script src="js/info/activation.js"></script>
+  <!--上記で記載していたライブラリを読み込む（S3にアップした名前をsrc=""に入れた） //-->
+</head>
+<body>
+
+    <div id="activation">
+        <h1>アカウント有効化</h1>
+        <form name="form-activation">
+            <span>メールアドレス</span>
+            <input type="text" id="email" placeholder="Email Address">
+            <br/>
+            <span>検証コード</span>
+            <input type="text" id="activationKey" placeholder="Activation Key">
+            <br/><br/>
+            <input type="button" id="activationButton" value="Activation">
+	    </form>
+	</div>
+	
+</body>
+</html>

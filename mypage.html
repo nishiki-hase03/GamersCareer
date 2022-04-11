@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang='ja'>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <title>サンプルフォーム</title>
+    <!-- aws sdk //-->
+    <script src="js/aws-sdk.min.js"></script>
+    <!-- aws cognito sdk//-->
+    <script src="js/jsbn.js"></script>
+    <script src="js/jsbn2.js"></script>
+    <script src="js/sjcl.js"></script>
+    <script src="js/moment.js"></script>
+    <script src="js/aws-cognito-sdk.min.js"></script>
+    <script src="js/amazon-cognito-identity.min.js"></script>
+    <!-- jquery //-->
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/info/menu.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        // ページ読み込み時に実行したい処理
+        var apiurl = "https://XXX/getUserProfile";
+        var data = {
+            'email': cognitoUser.signInUserSession.idToken.payload.email
+        }
+        $.ajax({
+                url: apiurl,
+                type: 'GET',
+                dataType: 'json',
+                data: data,
+                headers: {
+                    'Authorization': cognitoUser.signInUserSession.idToken.jwtToken,
+                },
+            })
+            // Ajaxリクエストが成功した時発動
+            .done(function(response) {
+                console.log(response);
+                //基本プロフィール取得
+                var BP = response["BP"];
+                $("#name").html(BP["name"]);
+                $("#birthday").html(BP["birthday"]);
+                $("#educational_background").html(BP["educational_background"]);
+                $("#telephone_number").html(BP["name"]);
+                $("#work_history").html(BP["work_history"]);
+                $("#self_introduction").html(BP["self_introduction"]);
+                $("#direction").html(BP["direction"]);
+                $("#skill").html(BP["skill"]);
+                $("#experience").html(BP["experience"]);
+                $("#like").html(BP["like"]);
+                $("#publishing_setting_bp").html(BP["publishing_setting"]);
+
+                //ゲーマープロフィール取得
+                var GP = response["GP"];
+                $("#game_title").html(GP["game_title"]);
+                $("#player_name").html(GP["player_name"]);
+                $("#rank").html(GP["rank"]);
+                $("#history").html(GP["history"]);
+                $("#twitter").html(GP["twitter"]);
+                $("#youtube").html(GP["youtube"]);
+                $("#delivery_platform").html(GP["delivery_platform"]);
+                $("#position").html(GP["position"]);
+                $("#good_at").html(GP["good_at"]);
+                $("#play_style").html(GP["play_style"]);
+                $("#publishing_setting_gp").html(GP["publishing_setting"]);
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                alert('エラーです')
+            })
+    });
+    </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <p>ナビゲーションバー</p>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row row-cols-2">
+            <div class="col card card-primary">
+                <div class="card-header">
+                    <h5 class="card-title">基本プロフィール</h5>
+                </div>
+                <table class="table table-striped">
+                    <tr>
+                        <th style="width: 30%">名前</th>
+                        <td id="name"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">生年月日</th>
+                        <td id="birthday"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">電話番号</th>
+                        <td id="telephone_number"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">職歴</th>
+                        <td id="work_history"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">自己PR</th>
+                        <td id="self_introduction"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">方向性</th>
+                        <td id="direction"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">資格／スキル</th>
+                        <td id="skill"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">ゲームを通じて得たもの</th>
+                        <td id="experience"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">ゲーム以外の趣味</th>
+                        <td id="like"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">公開設定</th>
+                        <td id="publishing_setting_bp"></td>
+                    </tr>
+                </table>
+                
+            </div>
+            <div class="col card card-primary">
+                <div class="card-header">
+                    <h5 class="card-title">ゲーマープロフィール</h5>
+                </div>
+                <table class="table table-striped">
+                    <tr>
+                        <th style="width: 30%">ゲームタイトル</th>
+                        <td id="game_title"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">プレイヤー名</th>
+                        <td id="player_name"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">最高ランク</th>
+                        <td id="rank"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">活動歴</th>
+                        <td id="history"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">twitter</th>
+                        <td id="twitter"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">Youtubeチャンネル</th>
+                        <td id="youtube"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">配信プラットフォーム</th>
+                        <td id="delivery_platform"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">ポジション／ロール</th>
+                        <td id="position"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">得意なキャラ／武器など</th>
+                        <td id="good_at"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">プレイスタイル</th>
+                        <td id="play_style"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%">公開設定</th>
+                        <td id="publishing_setting_gp"></td>
+                    </tr>
+                </table>
+                
+            </div>
+        </div>
+        <div class="row row-cols-2">
+            <div class="form-group col">
+                <button class="btn btn-secondary" onclick="location.href='./edit-basicprofile.html'">基本プロフィール編集</button>
+            </div>
+            <div class="form-group col">
+                <button class="btn btn-secondary" onclick="location.href='./edit-gamerprofile.html'">ゲーマープロフィール編集</button>
+            </div>
+        </div>
+        
+    </div>
+</body>
+
+</html>

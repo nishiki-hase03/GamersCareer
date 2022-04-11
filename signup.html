@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Cognitoサインアップ</title>
+  <!--上記で記載していたライブラリを読み込む（S3にアップした名前をsrc=""に入れる）//-->
+  <!-- aws sdk //-->
+  <script src="js/aws-sdk.min.js"></script>
+  <!-- aws cognito sdk//-->
+  <script src="js/jsbn.js"></script>
+  <script src="js/jsbn2.js"></script>
+  <script src="js/sjcl.js"></script>
+  <script src="js/moment.js"></script>
+  <script src="js/aws-cognito-sdk.min.js"></script>
+  <script src="js/amazon-cognito-identity.min.js"></script>
+  <!-- jquery //-->
+  <script src="js/jquery-3.1.1.min.js"></script>
+  <script src="js/info/submit_info.js"></script>
+  <!--上記で記載していたライブラリを読み込む（S3にアップした名前をsrc=""に入れた） //-->
+
+</head>
+
+<body>
+  <div>
+    <form>
+      <h2>サインアップ</h2>
+      <div id="message" class="alert" style="display:none;"></div>
+      <label for="inputUsername">ユーザー名</label>
+      <input type="text" id="inputUsername" placeholder="User name" required autofocus>
+      <label for="inputPassword">パスワード</label>
+      <input type="password" id="inputPassword" placeholder="Password" required>
+      <br />
+      <input type="button" id="user_add_btn" value="ユーザーを作成する">
+    </form>
+  </div>
+
+  <script>
+    $('#user_add_btn').click(function () {
+      //画面上の入力値であるメールアドレス＋パスワードを代入する
+      username = $("#inputUsername").val();
+      password = $("#inputPassword").val();
+      if (!username || !password) {
+        return false;
+      }
+      userPool.signUp(username, password, attributeList, null, function (err, result) {
+        if (err) {
+          message_text = err;
+          message_class = "alert-danger";
+        } else {
+          cognitoUser = result.user;
+          alert("メールアドレスに検証コードを送付しました");
+          message_class = "alert-success";
+          window.location.href = './activation.html';
+        }
+        $("#message").text(message_text);
+        $("#message").addClass(message_class);
+        $('#message').show();
+        //setTimeoutはmessage表記後フェードアウトする関数なのでmustではない
+        setTimeout(function () {
+          $('#message').fadeOut();
+          $("#message").removeClass(message_class);
+        }, 5000);
+      });
+    });
+  </script>
+</body>
+
+</html>

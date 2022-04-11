@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <title>Cognitoサインイン</title>
+ <!--上記で記載していたライブラリを読み込む（S3にアップした名前をsrc=""に入れる）//-->
+    <!-- aws sdk //-->
+    <!-- aws sdk //-->
+    <script src="js/aws-sdk.min.js"></script>
+    <!-- aws cognito sdk//-->
+    <script src="js/jsbn.js"></script>
+    <script src="js/jsbn2.js"></script>
+    <script src="js/sjcl.js"></script>
+    <script src="js/moment.js"></script>
+    <script src="js/aws-cognito-sdk.min.js"></script>
+    <script src="js/amazon-cognito-identity.min.js"></script>
+    <!-- jquery //-->
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/info/login_info.js"></script>
+ <!--上記で記載していたライブラリを読み込む（S3にアップした名前をsrc=""に入れる）//-->
+</head>
+<body>
+<div class="container">
+    <form class="form-signin">
+        <h2 class="form-signin-heading">サインイン</h2>
+        <div id="message" class="alert" style="display:none;"></div>
+        <label for="inputUsername">ユーザー名</label>
+        <input type="text" id="inputUsername" placeholder="User name" required autofocus>
+        <label for="inputPassword">パスワード</label>
+        <input type="password" id="inputPassword" placeholder="Password" required>
+        <br/>
+        <input type="submit" id="login-button" value="ログイン">
+    </form>
+</div>
+<script>
+
+</script>
+<script>
+    $(function() {
+        $("#login-button").click(function(event){
+            //画面上の入力値であるメールアドレス＋パスワードを代入する
+            event.preventDefault();
+            let authenticationData = {
+                Username : $('#inputUsername').val(),
+                Password : $('#inputPassword').val(),
+            };
+            let authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
+
+            //2Amazon Cognito Userpoolの指定＋クライアントアプリの指定
+            let poolData = {
+                UserPoolId: 'XXX',//ユーザープール用のID
+                ClientId: 'XXX'//サインイン用アプリID　フェデレーションIDのCognito認証に利用したクライアントアプリのID
+            };
+
+            let userPool = new  AmazonCognitoIdentity.CognitoUserPool(poolData);
+            let userData = {
+                Username : $("#inputUsername").val(),
+                Pool : userPool
+            };
+
+            let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+            cognitoUser.authenticateUser(authenticationDetails, {
+                onSuccess: function (authresult) {
+                    // アクセストークン
+                    sessionStorage.setItem('accessToken', authresult.accessToken.jwtToken);
+                    // アクセストークの有効期限
+                    sessionStorage.setItem('accessToken.payload.exp', authresult.accessToken.payload.exp);
+                    // IDトークン
+                    sessionStorage.setItem('idToken', authresult.accessToken.payload.exp);
+                    // 更新トークン
+                    sessionStorage.setItem('refreshToken', authresult.refreshToken.token);
+                    // ユーザー名
+                    sessionStorage.setItem('username', authresult.accessToken.payload.username);
+                    window.location.href = './index.html';
+                },
+                onFailure: function(err) {
+                    // alert(err.message);
+                    alert("ログインに失敗しました");
+                },
+            });
+        });
+    });
+</script>
+</body>
+</html>
